@@ -110,9 +110,13 @@
       <tr>
         <td><a href="/dishes/<%= dish.id =%>"><%= dish.name %></a></td>
 
+
         <td>
           
             <% if current_user.bookmarks.where({dish_id: dish.id}).count > 0 %>
+
+        <td> 
+
             <a href="/venues/<%=  current_user.bookmarks.where({dish_id: dish.id}).order("created_at").last.venue_id %>">
               <%= Venue.find(current_user.bookmarks.where({dish_id: dish.id}).order("created_at").last.venue_id).name %>  
             </a>
