@@ -45,7 +45,7 @@
       <% @dish.bookmarks.each do |bookmark| %>
         <li class="list-group-item">
           <a href="/bookmarks/<%= bookmark.id %>">
-            <%= bookmark.notes %>
+            <p><%= Venue.find(bookmark.venue_id).name %></p>
           </a>
           <div class="btn-group btn-group-xs float-right">
             <a href="/bookmarks/<%= bookmark.id %>" class="btn btn-primary">
@@ -160,3 +160,4 @@
     </ul>
   </div>
 </div>
+
