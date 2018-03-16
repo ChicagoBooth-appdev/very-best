@@ -118,7 +118,7 @@
             </a>
           <% else %>
             <% @bookmark = Bookmark.new %>
-            <form action="/create_bookmark" method="post">
+            <form action="/create_bookmark" method="post" class="form-inline">
               <!-- Hidden input for authenticity token to protect from forgery -->
               <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
         
@@ -128,10 +128,12 @@
               </div>
         
               <!-- Label and input for venue_id -->
-              <div class="form-group">
-
-                <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id), :class => "form-control") %>
-              </div>
+              <!--<div class="form-group">-->
+                <%= select_tag(:venue_id, options_from_collection_for_select(Venue.all, :id, :name, @bookmark.venue_id),:prompt => "Choose a venue...", :class => "form-control") %>
+                <button class="btn btn-primary btn-sm">
+                  <i class="fa fa-heart"></i>
+                </button>
+              <!--</div>-->
         
               <!-- Label and input for user_id -->
               <input type="hidden" name="user_id" value="<%= current_user.id %>">
@@ -141,17 +143,16 @@
                 <input type="hidden" name="notes" value="">
               </div>
         
-              <button class="btn btn-success">
-                Create Bookmark
-              </button>
             </form>
           <% end %>
         </td>
-        <td>
+        <td class="text-right">
           <% if dish.cuisine.present? %>
-            <a href="/cuisines/<%= dish.cuisine.id %>">
-              <%= dish.cuisine.name %>
-            </a>
+            <span class="badge badge-primary">
+              <!--<a href="/cuisines/<%= dish.cuisine.id %>">-->
+                <%= dish.cuisine.name %>
+              <!--</a>-->
+            </span>
           <% end %>
         </td>
         <!--<td>-->
