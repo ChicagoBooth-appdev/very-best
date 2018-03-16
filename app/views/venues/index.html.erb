@@ -102,23 +102,29 @@
       </div>
       <div>
         <table class="table table-striped table-hover">
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Neighborhood</th>
+          <!--<tr>-->
+          <!--  <th>Name</th>-->
+            <!--<th>Address</th>-->
+            <!--<th>Neighborhood</th>-->
             <!--<th>Actions</th>-->
-          </tr>
+          <!--</tr>-->
     
           <% @venues.each do |venue| %>
             <% if current_user.bookmarked_venues.exists?(venue.id)  %>
               <tr>
-                <td><%= venue.name %></td>
-                <td><%= venue.address %></td>
                 <td>
+                  <a href="/venues/<%= venue.id %>">
+                    <%= venue.name %>
+                  </a>
+                </td>
+                <!--<td><%= venue.address %></td>-->
+                <td class="text-right">
                   <% if venue.neighborhood.present? %>
-                    <a href="/neighborhoods/<%= venue.neighborhood.id %>">
-                      <%= venue.neighborhood.name %>
-                    </a>
+                    <!--<a href="/neighborhoods/<%= venue.neighborhood.id %>">-->
+                    <small class="text-muted float-right">
+                      <%= venue.neighborhood.name %>, <%= venue.neighborhood.city %>
+                    </small>
+                    <!--</a>-->
                   <% end %>
                 </td>
                 <!--<td>-->
