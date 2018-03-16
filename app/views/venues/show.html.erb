@@ -1,43 +1,128 @@
-<div class="page-header">
-  <h3>Venue #<%= @venue.id %></h3>
-</div>
+<!--<div class="page-header">-->
+<!--  <h3>Venue #<%= @venue.id %></h3>-->
+<!--</div>-->
 
-<div class="row">
-  <div class="col-md-12 mb-2">
-    <dl class="dl-horizontal">
-      <dt>Name</dt>
-      <dd><%= @venue.name %></dd>
-
-      <dt>Address</dt>
-      <dd>
-        <div>
-          <div id="location_map" style="height: 480px;"></div>
-        </div>
-      </dd>
-
-      <dt>Neighborhood</dt>
-      <dd>
-        <% if @venue.neighborhood.present? %>
-          <a href="/neighborhoods/<%= @venue.neighborhood_id %>">
-            <%= @venue.neighborhood.name %>
-          </a>
+<div class="row mt-2 justify-content-md-center">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">
+          <%= @venue.name %>
+            <small class="text-muted">
+                Bucktown,
+                1960 N Western Ave, Chicago, IL 60647, USA
+            </small>
+        </h4>
+      </div>
+      
+      
+      <div class="card-body">
+        <!--<dl class="dl-horizontal">-->
+          <!--<dt>Name</dt>-->
+          <!--<dd><%= @venue.name %></dd>-->
+    
+          <!--<dt>Address</dt>-->
+          <!--<dd>-->
+          <div>
+            <div id="location_map" style="height: 480px;"></div>
+          </div>
+          <!--</dd>-->
+    
+        <!--  <dt>Neighborhood</dt>-->
+        <!--  <dd>-->
+        <!--    <% if @venue.neighborhood.present? %>-->
+        <!--      <a href="/neighborhoods/<%= @venue.neighborhood_id %>">-->
+        <!--        <%= @venue.neighborhood.name %>-->
+        <!--      </a>-->
+        <!--    <% end %>-->
+        <!--  </dd>-->
+    
+        <!--</dl>-->
+    
+        <!--<div class="btn-group btn-group-justified">-->
+        <!--  <a href="/venues" class="btn btn-primary">-->
+        <!--    Back-->
+        <!--  </a>-->
+        <!--  <a href="/venues/<%= @venue.id %>/edit" class="btn btn-warning">-->
+        <!--    Edit-->
+        <!--  </a>-->
+        <!--  <a href="/delete_venue/<%= @venue.id %>" class="btn btn-danger" rel="nofollow">-->
+        <!--    Delete-->
+        <!--  </a>-->
+        <!--</div> -->
+        
+      </div>
+      <!--end of card body above this line-->
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-success">
+          Dishes you loved here
+        </li>
+        <% @venue.bookmarks.each do |bookmark| %>
+          <% if current_user.id ==  bookmark.user_id %>
+            <li class="list-group-item">
+              <p>
+                <a href="">
+                  <%= Dish.find(bookmark.dish_id).name %>  
+                </a>
+                <small class="float-right text-muted">
+                  about 
+                  <%  if (Time.now - bookmark.created_at)/3600 < 24 %>
+                    <%= ((Time.now - bookmark.created_at)/3600).ceil  %> hours
+                  <%  else %>  
+                    <%= ((Time.now - bookmark.created_at)/(3600*24)).ceil %> days  
+                  <%  end %>
+                  
+                  ago
+  
+                  <a href="/bookmarks/<%= bookmark.id %>/edit">
+                    <i class="fa fa-fw fa-edit"></i>
+                  </a>
+  
+                  <a href="/delete_bookmark/<%= bookmark.id %>">
+                    <i class="fa fa-fw fa-trash-o"></i>
+                  </a>
+                </small>
+                
+              </p>
+            </li>
+          <% end %>
         <% end %>
-      </dd>
-
-    </dl>
-
-    <div class="btn-group btn-group-justified">
-      <a href="/venues" class="btn btn-primary">
-        Back
-      </a>
-      <a href="/venues/<%= @venue.id %>/edit" class="btn btn-warning">
-        Edit
-      </a>
-      <a href="/delete_venue/<%= @venue.id %>" class="btn btn-danger" rel="nofollow">
-        Delete
-      </a>
+        <li class="list-group-item">
+          <form action="/create_bookmark" method="post" class="form-inline float-left">
+            <!-- Hidden input for authenticity token to protect from forgery -->
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+      
+            <!-- Label and input for dish_id -->
+            <!--<div class="form-group">-->
+              <input type="hidden" name="venue_id" value="<%= @venue.id %>">
+            <!--</div>-->
+      
+            <!-- Label and input for venue_id -->
+            <!--<div class="form-group">-->
+              <%= select_tag(:dish_id, options_from_collection_for_select(Dish.all, :id, :name, @bookmark.dish_id),:prompt => "Choose a dish...", :class => "form-control") %>
+              <button class="btn btn-primary btn-sm">
+                <i class="fa fa-heart"></i>
+              </button>
+            <!--</div>-->
+      
+            <!-- Label and input for user_id -->
+            <input type="hidden" name="user_id" value="<%= current_user.id %>">
+      
+            <!-- Label and input for notes -->
+            <div class="form-group">
+              <input type="hidden" name="notes" value="">
+            </div>
+          </form>          
+          <small class="float-right text-muted">
+            right now
+          </small>
+        </li>
+      </ul>
+      
     </div>
+    <!--end of card above this line-->
   </div>
+  <!--end of col md 6 above this line-->
 </div>
 
 <!-- A Venue has many bookmarks -->
@@ -45,9 +130,9 @@
 <div class="row">
   <div class="col-md-12">
     <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        Bookmarks
-      </li>
+      <!--<li class="list-group-item list-group-item-info">-->
+      <!--  Bookmarks-->
+      <!--</li>-->
 
       <% @venue.bookmarks.each do |bookmark| %>
         <li class="list-group-item">
@@ -68,40 +153,40 @@
         </li>
       <% end %>
 
-      <li class="list-group-item">
-        <form action="/create_bookmark" method="post">
+    <!--  <li class="list-group-item">-->
+    <!--    <form action="/create_bookmark" method="post">-->
       <!-- Hidden input for authenticity token to protect from forgery -->
-      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+    <!--  <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">-->
 
       <!-- Label and input for dish_id -->
-      <div class="form-group">
-        <label for="dish_id" class="control-label">
-          Dish
-        </label>
+    <!--  <div class="form-group">-->
+    <!--    <label for="dish_id" class="control-label">-->
+    <!--      Dish-->
+    <!--    </label>-->
 
-        <%= select_tag(:dish_id, options_from_collection_for_select(Dish.all, :id, :name), :class => "form-control") %>
-      </div>
+    <!--    <%= select_tag(:dish_id, options_from_collection_for_select(Dish.all, :id, :name), :class => "form-control") %>-->
+    <!--  </div>-->
 
       <!-- Label and input for venue_id -->
-      <input type="hidden" name="venue_id" value="<%= @venue.id %>">
+    <!--  <input type="hidden" name="venue_id" value="<%= @venue.id %>">-->
 
       <!-- Label and input for user_id -->
-      <input type="hidden" name="user_id" value="<%= current_user.id %>">
+    <!--  <input type="hidden" name="user_id" value="<%= current_user.id %>">-->
 
       <!-- Label and input for notes -->
-      <div class="form-group">
-        <label for="notes" class="control-label">
-          Notes
-        </label>
+    <!--  <div class="form-group">-->
+    <!--    <label for="notes" class="control-label">-->
+    <!--      Notes-->
+    <!--    </label>-->
 
-        <textarea id="notes" name="notes" placeholder="Notes" class="form-control" rows="3"></textarea>
-      </div>
+    <!--    <textarea id="notes" name="notes" placeholder="Notes" class="form-control" rows="3"></textarea>-->
+    <!--  </div>-->
 
-      <button class="btn btn-block btn-success">
-        Create Bookmark
-      </button>
-    </form>
-      </li>
+    <!--  <button class="btn btn-block btn-success">-->
+    <!--    Create Bookmark-->
+    <!--  </button>-->
+    <!--</form>-->
+    <!--  </li>-->
     </ul>
   </div>
 </div>
